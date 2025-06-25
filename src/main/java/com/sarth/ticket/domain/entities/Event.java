@@ -1,4 +1,4 @@
-package com.sarth.ticket.domain;
+package com.sarth.ticket.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

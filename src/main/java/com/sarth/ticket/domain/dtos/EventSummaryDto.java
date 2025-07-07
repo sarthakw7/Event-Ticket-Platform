@@ -1,20 +1,20 @@
-package com.sarth.ticket.domain;
+package com.sarth.ticket.domain.dtos;
 
 import com.sarth.ticket.domain.entities.EventStatusEnum;
-import com.sarth.ticket.domain.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CreateEventRequest {
+@AllArgsConstructor
+public class EventSummaryDto {
 
+    private UUID id;
     private String name;
     private LocalDateTime start;
     private LocalDateTime end;
@@ -22,8 +22,5 @@ public class CreateEventRequest {
     private LocalDateTime salesStart;
     private LocalDateTime salesEnd;
     private EventStatusEnum status;
-    private List<CreateTicketTypeRequest> ticketTypes = new ArrayList<>();
-
-
-
-}
+    private List<TicketTypeSummaryDto> ticketTypes;
+} 

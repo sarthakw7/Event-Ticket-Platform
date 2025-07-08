@@ -30,9 +30,9 @@ A backend platform for creating and managing events, selling tickets, validating
 ## 🚧 Work in Progress
 
 ### Upcoming Features
-- [ ] List Events: `GET /api/v1/events`
-- [ ] Retrieve Event: `GET /api/v1/events/{eventId}`
-- [ ] Delete Event: `DELETE /api/v1/events/{eventId}`
+- [x] List Events: `GET /api/v1/events`
+- [x] Retrieve Event: `GET /api/v1/events/{eventId}`
+- [x] Delete Event: `DELETE /api/v1/events/{eventId}`
 - [ ] Ticket Type Management:
   - [ ] Create / Update / Delete Ticket Types
   - [ ] Ticket type listing endpoints

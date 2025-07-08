@@ -2,11 +2,9 @@ package com.sarth.ticket.mappers;
 
 import com.sarth.ticket.domain.CreateEventRequest;
 import com.sarth.ticket.domain.CreateTicketTypeRequest;
-import com.sarth.ticket.domain.dtos.CreateEventRequestDto;
-import com.sarth.ticket.domain.dtos.CreateEventResponseDto;
-import com.sarth.ticket.domain.dtos.CreateTicketTypeRequestDto;
-import com.sarth.ticket.domain.dtos.EventSummaryDto;
-import com.sarth.ticket.domain.dtos.TicketTypeSummaryDto;
+import com.sarth.ticket.domain.UpdateEventRequest;
+import com.sarth.ticket.domain.UpdateTicketTypeRequest;
+import com.sarth.ticket.domain.dtos.*;
 import com.sarth.ticket.domain.entities.Event;
 import com.sarth.ticket.domain.entities.TicketType;
 import org.mapstruct.Mapper;
@@ -21,8 +19,20 @@ public interface EventMapper {
 
     CreateEventResponseDto toDto(Event event);
 
-    EventSummaryDto toSummaryDto(Event event);
+    ListEventTicketTypeResponseDto toDto(TicketType ticketType);
 
-    TicketTypeSummaryDto toSummaryDto(TicketType ticketType);
+    ListEventResponseDto toListEventResponseDto(Event event);
+
+    GetEventDetailsTicketTypesResponseDto toGetEventDetailsTicketTypesResponseDto(TicketType ticketType);
+
+    GetEventDetailsResponseDto toGetEventDetailsResponseDto(Event event);
+
+    UpdateTicketTypeRequest fromDto(UpdateTicketTypeRequestDto dto);
+
+    UpdateEventRequest fromDto(UpdateEventRequestDto dto);
+
+    UpdateTicketTypeResponseDto toUpdateTicketTypeResponseDto(TicketType ticketType);
+
+    UpdateEventResponseDto toUpdateEventResponseDto(Event event);
 
 }

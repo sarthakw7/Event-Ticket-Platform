@@ -352,7 +352,7 @@ const DashboardManageEventPage: React.FC = () => {
       await createEvent(accessToken, request);
       setSuccessMessage("Event created successfully!");
       setError(undefined);
-      // navigate("/dashboard/events"); // Removed automatic redirect
+      navigate("/dashboard/events"); // Removed automatic redirect
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

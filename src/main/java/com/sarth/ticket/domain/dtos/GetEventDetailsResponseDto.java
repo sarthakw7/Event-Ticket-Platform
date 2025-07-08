@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class EventSummaryDto {
+@NoArgsConstructor
+public class GetEventDetailsResponseDto {
 
     private UUID id;
     private String name;
@@ -22,5 +23,7 @@ public class EventSummaryDto {
     private LocalDateTime salesStart;
     private LocalDateTime salesEnd;
     private EventStatusEnum status;
-    private List<TicketTypeSummaryDto> ticketTypes;
-} 
+    private List<GetEventDetailsTicketTypesResponseDto> ticketTypes = new ArrayList<>();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

@@ -58,7 +58,9 @@ const OrganizersLandingPage: React.FC = () => {
               >
                 Create an Event
               </Button>
-              <Button>Browse Events</Button>
+              <Button 
+              className="cursor-pointer"
+              onClick={() => navigate("/dashboard/events")} >Browse Events</Button>
             </div>
           </div>
           {/* Right Column */}

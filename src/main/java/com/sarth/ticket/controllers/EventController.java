@@ -1,16 +1,14 @@
 package com.sarth.ticket.controllers;
 
 import com.sarth.ticket.domain.CreateEventRequest;
-import com.sarth.ticket.domain.dtos.CreateEventRequestDto;
-import com.sarth.ticket.domain.dtos.CreateEventResponseDto;
-import com.sarth.ticket.domain.dtos.EventSummaryDto;
+import com.sarth.ticket.domain.UpdateEventRequest;
+import com.sarth.ticket.domain.dtos.*;
 import com.sarth.ticket.domain.entities.Event;
 import com.sarth.ticket.mappers.EventMapper;
 import com.sarth.ticket.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,26 +33,58 @@ public class EventController {
             ){
 
         CreateEventRequest createEventRequest = eventMapper.fromDto(createEventRequestDto);
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = parseUserId(jwt);
 
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<EventSummaryDto>> listEvents(
+
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> updateEvent(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto
+    ){
+
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+
+        Event updatedEvent = eventService.updateEventForOrganizer(
+                userId, eventId, updateEventRequest
+        );
+
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
+
+        return ResponseEntity.ok(updateEventResponseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ListEventResponseDto>> listEvents(
+            @AuthenticationPrincipal Jwt jwt, Pageable pageable
     ) {
-        UUID userId = UUID.fromString(jwt.getSubject());
-        Pageable pageable = PageRequest.of(page, size);
-        
-        Page<Event> events = eventService.listEvents(userId, pageable);
-        Page<EventSummaryDto> eventSummaryDtos = events.map(eventMapper::toSummaryDto);
-        
-        return ResponseEntity.ok(eventSummaryDtos);
+        UUID userId = parseUserId(jwt);
+        Page<Event> events = eventService.listEventsForOrganizer(userId, pageable);
+        return ResponseEntity.ok(
+                events.map(eventMapper::toListEventResponseDto)
+        );
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<GetEventDetailsResponseDto> getEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ) {
+        UUID userId = parseUserId(jwt);
+        return eventService.getEventForOrganizer(userId, eventId)
+                .map(eventMapper::toGetEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    private UUID parseUserId(Jwt jwt) {
+        return UUID.fromString(jwt.getSubject());
     }
 
 }

@@ -8,6 +8,8 @@ import com.sarth.ticket.mappers.EventMapper;
 import com.sarth.ticket.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EventController {
 
-    private final EventMapper eventMapper;
+    @Autowired
+    @Lazy
+    private EventMapper eventMapper;
     private final EventService eventService;
 
     @PostMapping
@@ -81,6 +85,16 @@ public class EventController {
                 .map(eventMapper::toGetEventDetailsResponseDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping(path = "/{eventId}")
+    public ResponseEntity<Void> deleteEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ){
+        UUID userId = parseUserId(jwt);
+        eventService.deleteEventForOrganizer(userId, eventId);
+        return ResponseEntity.noContent().build();
     }
 
     private UUID parseUserId(Jwt jwt) {

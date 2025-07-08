@@ -4,6 +4,7 @@ import com.sarth.ticket.domain.CreateEventRequest;
 import com.sarth.ticket.domain.UpdateEventRequest;
 import com.sarth.ticket.domain.UpdateTicketTypeRequest;
 import com.sarth.ticket.domain.entities.Event;
+import com.sarth.ticket.domain.entities.EventStatusEnum;
 import com.sarth.ticket.domain.entities.TicketType;
 import com.sarth.ticket.domain.entities.User;
 import com.sarth.ticket.exceptions.EventNotFoundException;
@@ -144,5 +145,26 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.save(existingEvent);
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteEventForOrganizer(UUID organizerId, UUID id) {
+        getEventForOrganizer(organizerId, id).ifPresent(eventRepository::delete);
+    }
+
+    @Override
+    public Page<Event> listPublishedEvents(Pageable pageable) {
+         return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
+    }
+
+    @Override
+    public Page<Event> searchPublishedEvents(String query, Pageable pageable) {
+        return eventRepository.searchEvents(query, pageable);
+    }
+
+    @Override
+    public Optional<Event> getPublishedEvent(UUID id) {
+        return eventRepository.findByIdAndStatus(id, EventStatusEnum.PUBLISHED);
     }
 }

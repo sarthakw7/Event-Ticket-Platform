@@ -1,0 +1,1 @@
+ALTER TABLE qr_codes ALTER COLUMN value TYPE TEXT;

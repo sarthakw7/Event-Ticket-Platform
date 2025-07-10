@@ -1,10 +1,7 @@
 package com.sarth.ticket.controllers;
 
 import com.sarth.ticket.domain.dtos.ErrorDto;
-import com.sarth.ticket.exceptions.EventNotFoundException;
-import com.sarth.ticket.exceptions.EventUpdateException;
-import com.sarth.ticket.exceptions.TicketTypeNotFoundException;
-import com.sarth.ticket.exceptions.UserNotFoundException;
+import com.sarth.ticket.exceptions.*;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +17,36 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(TicketsSoldOutException.class)
+    public ResponseEntity<ErrorDto> handleTicketsSoldOutException(TicketsSoldOutException ex) {
+        log.error("Caught TicketsSoldOutException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Tickets are sold out for this ticket type");
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+
+    }
+
+
+    @ExceptionHandler(QRCodeNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleQRCodeNotFoundException(QRCodeNotFoundException ex) {
+        log.error("Caught QRCodeNotFoundException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("QR Code not found");
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+
+    @ExceptionHandler(QRCodeGenerationException.class)
+    public ResponseEntity<ErrorDto> handleQRCodeGenerationException(QRCodeGenerationException ex) {
+        log.error("Caught QRCodeGenerationException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Unable to generate QR Code");
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
 
 
     @ExceptionHandler(EventUpdateException.class)

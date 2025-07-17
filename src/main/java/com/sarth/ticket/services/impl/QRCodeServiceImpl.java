@@ -9,9 +9,11 @@ import com.sarth.ticket.domain.entities.QRCode;
 import com.sarth.ticket.domain.entities.QRCodeStatusEnum;
 import com.sarth.ticket.domain.entities.Ticket;
 import com.sarth.ticket.exceptions.QRCodeGenerationException;
+import com.sarth.ticket.exceptions.QRCodeNotFoundException;
 import com.sarth.ticket.repositories.QRCodeRepository;
 import com.sarth.ticket.services.QRCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QRCodeServiceImpl implements QRCodeService {
 
     private static final int QR_HEIGHT = 300;
@@ -48,6 +51,20 @@ public class QRCodeServiceImpl implements QRCodeService {
         } catch (IOException | WriterException ex) {
 
             throw new QRCodeGenerationException("Failed to generate QR Code", ex);
+        }
+    }
+
+    @Override
+    public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+        QRCode qrCode = qrCodeRepository.findByTicket_IdAndTicket_Purchaser_Id(ticketId, userId)
+                .orElseThrow(QRCodeNotFoundException::new);
+
+        try {
+            return Base64.getDecoder().decode(qrCode.getValue());
+        } catch (IllegalArgumentException ex)
+        {
+            log.error("Invalid base64 QR COde for ticket Id: {}", ticketId, ex);
+            throw new QRCodeNotFoundException();
         }
     }
 

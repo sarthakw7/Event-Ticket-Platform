@@ -33,12 +33,12 @@ A backend platform for creating and managing events, selling tickets, validating
 - [x] List Events: `GET /api/v1/events`
 - [x] Retrieve Event: `GET /api/v1/events/{eventId}`
 - [x] Delete Event: `DELETE /api/v1/events/{eventId}`
-- [ ] Ticket Type Management:
-  - [ ] Create / Update / Delete Ticket Types
-  - [ ] Ticket type listing endpoints
-- [ ] Ticket Purchase flow for attendees
-- [ ] QR Code generation and ticket validation
-- [ ] Sales dashboard & reporting features
+- [x] Ticket Type Management:
+  - [x] Create / Update / Delete Ticket Types
+  - [x] Ticket type listing endpoints
+- [x] Ticket Purchase flow for attendees
+- [x] QR Code generation and ticket validation
+- [x] Sales dashboard & reporting features
 
 ---
 
